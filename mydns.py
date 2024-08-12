@@ -106,8 +106,7 @@ def send_query(ip_address, domain_name, record_type):
 
 def get_answer(packet):
     for x in packet.answers:
-        if x.typ == A:
-            return x.data
+        if x.typ == A: return x.data
         
 def get_ns_ip(packet):
     for x in packet.additionals:
