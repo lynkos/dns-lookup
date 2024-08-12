@@ -118,34 +118,41 @@ def get_ns(packet):
 
 def display_reply(packet):
     print("Reply received. Content overview:")
+
+    num_answers = len(packet.answers)
+    num_authorities = len(packet.authorities)
+    num_additionals = len(packet.additionals)
         
-    print(f"\t{len(packet.answers)} Answers.")
-    print(f"\t{len(packet.authorities)} Intermediate Name Servers.")
-    print(f"\t{len(packet.additionals)} Additional Information Records.")
+    print(f"\t{num_answers} Answers.")
+    print(f"\t{num_authorities} Intermediate Name Servers.")
+    print(f"\t{num_additionals} Additional Information Records.")
 
-    print("Answers Section:")
-    for answer in packet.answers:
-        if answer.typ == A:
-            print(f"\tName : {answer.name.decode()}\tIP : {answer.data}")
-        else: print(f"\tName : {answer.name.decode()}")
+    if num_answers > 0:
+        print("\nAnswers Section:")
+        for answer in packet.answers:
+            if answer.typ == A:
+                print(f"\tName: {answer.name.decode()}\tIP: {answer.data}")
+            else: print(f"\tName: {answer.name.decode()}")
 
-    print("Authority Section:")
-    for authority in packet.authorities:
-        if authority.typ == NS:
-            print(f"\tName : {authority.name.decode()}\tName Server : {authority.data.decode()}")
-        else: print(f"\tName : {authority.name.decode()}")
+    if num_authorities > 0:
+        print("\nAuthority Section:")
+        for authority in packet.authorities:
+            if authority.typ == NS:
+                print(f"\tName: {authority.name.decode()}\tName Server: {authority.data.decode()}")
+            else: print(f"\tName: {authority.name.decode()}")
 
-    print("Additional Information Section:")
-    for additional in packet.additionals:
-        if additional.typ == A:
-            print(f"\tName : {additional.name.decode()}\tIP : {additional.data}")
-        else: print(f"\tName : {additional.name.decode()}")
+    if num_additionals > 0:
+        print("\nAdditional Information Section:")
+        for additional in packet.additionals:
+            if additional.typ == A:
+                print(f"\tName: {additional.name.decode()}\tIP: {additional.data}")
+            else: print(f"\tName: {additional.name.decode()}")
 
 def dns_lookup(domain_name, dns_ip, record_type):
     ns = dns_ip
     while True:
         print("\n----------------------------------------------------------------\n")
-        print(f"DNS server to query: {ns}")
+        print(f"DNS server to query: {ns}\n")
         reply = send_query(ns, domain_name, record_type)
 
         if reply:
